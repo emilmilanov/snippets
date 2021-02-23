@@ -5,12 +5,21 @@ orbs:
   # Declare a dependency on the welcome-orb
   welcome: circleci/welcome-orb@0.4.1
 # Orchestrate or schedule a set of jobs
+
+jobs:
+  test:
+      docker:
+        - image: cimg/base:2021.02
+      steps:
+        - checkout
+        - run:
+            command: cat /sys/fs/cgroup/memory/memory.max_usage_in_bytes
+            when: always
+
 workflows:
   # Name the workflow "welcome"
   welcome:
     # Run the welcome/run job in its own container
     jobs:
       - welcome/run
-        - run:
-            command: cat /sys/fs/cgroup/memory/memory.max_usage_in_bytes
-            when: always
+      - test
